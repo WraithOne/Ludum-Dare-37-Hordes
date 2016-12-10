@@ -10,7 +10,7 @@ var createScene = function ()
     scene.clearColor = new BABYLON.Color3(0, 1, 0);
 
     // This creates and positions a free camera
-    var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 5, 0), scene);
+    var camera = new BABYLON.FreeCamera("FreeCamera", new BABYLON.Vector3(0, 3, 0), scene);
     camera.attachControl(canvas, true);
 
     //Then apply collisions and gravity to the active camera
@@ -28,7 +28,9 @@ var createScene = function ()
     //Ground
     var ground = BABYLON.Mesh.CreatePlane("ground", roomSize, scene);
     ground.material = new BABYLON.StandardMaterial("groundMat", scene);
-    ground.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
+    ground.material.diffuseTexture = new BABYLON.Texture("assets/Floor.png",scene);
+    ground.material.diffuseTexture.uScale = 12.0;
+    ground.material.diffuseTexture.vScale = 12.0;
     ground.material.backFaceCulling = false;
     ground.position = new BABYLON.Vector3(0, 0, 0);
     ground.rotation = new BABYLON.Vector3(Math.PI / 2, 0, 0);
@@ -36,7 +38,9 @@ var createScene = function ()
 
     //Wall material
     var wallMaterial = new BABYLON.StandardMaterial("wallMat", scene);
-    wallMaterial.diffuseColor = new BABYLON.Color3(1,0,0);
+    wallMaterial.diffuseTexture = new BABYLON.Texture("assets/Wall.png",scene);
+    wallMaterial.diffuseTexture.uScale = 12.0;
+    wallMaterial.diffuseTexture.vScale = 12.0;
     wallMaterial.backFaceCulling = false;
 
     // Wall Front
@@ -61,6 +65,20 @@ var createScene = function ()
     wallright.position = new BABYLON.Vector3(roomSize, -20, 0);
     wallright.rotation = new BABYLON.Vector3(0, Math.PI / 2, 0);
     wallright.checkCollisions = true;
+
+    // SkyBox
+    var skybox = BABYLON.Mesh.CreateBox("skyBox", 200.0, scene);
+    var skyboxMaterial = new BABYLON.StandardMaterial("skyBoxMat", scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.disableLighting = true;
+    skybox.material = skyboxMaterial;
+    skybox.infiniteDistance = true;
+    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("assets/skybox/skybox", scene);
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skybox.renderingGroupId = 0;
+
     // Register updateScene to execute before Render
     scene.registerBeforeRender(updateScene);
 
